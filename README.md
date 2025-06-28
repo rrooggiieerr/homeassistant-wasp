@@ -130,6 +130,11 @@ With the above, when `binary_sensor.office_occupied` is `on` your automations ca
 
 If you don't have "door sensors" or have a room without doors, you can leave that part out of your configuration and out of the template `binary_sensor`. The same is true if you do not have "exit motion sensors". By setting these sensors in an `or` configuration using the template `binary_sensor` you ensure that occupancy will be indicated if any of these sensors have an `on` state.
 
+## Credits
+
+This helper was originally developed by [Daniel Lashua](https://github.com/dlashua) and is further
+improved on and maintained by me.
+
 ## Contribution and appreciation
 
 You can contribute to this helper, or show your appreciation, in the following ways.
