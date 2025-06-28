@@ -5,7 +5,7 @@ NAME = "Wasp Sensor"
 DOMAIN = "wasp_sensor"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
-ISSUE_URL = "https://github.com/rrooggiieerr/homeassistant_wasp/issues"
+ISSUE_URL = "https://github.com/rrooggiieerr/homeassistant-wasp/issues"
 
 # Platforms
 BINARY_SENSOR = "binary_sensor"

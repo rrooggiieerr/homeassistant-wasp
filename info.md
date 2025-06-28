@@ -2,7 +2,7 @@
 
 This is a Wasp Sensor for Home Assistant. It is installable as a `custom_component` or via [HACS](https://hacs.xyz/).
 
-To install via HACS add the repository URL `https://github.com/dlashua/hass-wasp_sensor` as a custom resposity. It should then show up on the Inegrations Installation page.
+To install via HACS add the repository URL `https://github.com/rrooggiieerr/homeassistant-wasp` as a custom resposity. It should then show up on the Inegrations Installation page.
 
 # Wasp Sensor
 
