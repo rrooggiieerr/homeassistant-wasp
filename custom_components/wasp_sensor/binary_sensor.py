@@ -4,9 +4,12 @@ import asyncio
 from functools import partial
 import logging
 
+from config.custom_components.axaremote import _LOGGER
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EVENT_HOMEASSISTANT_START
-from homeassistant.core import Event, callback
+from homeassistant.core import Event, HomeAssistant, callback
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.restore_state import RestoreEntity
 
@@ -34,6 +37,20 @@ async def async_setup_platform(hass, _, async_add_entities, discovery_info=None)
 
     async_add_entities(entities)
     await discovery_info["registrar"](entities)
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Set up the Wasp in a Box sensor."""
+    entities = []
+
+    _LOGGER.debug(config_entry)
+    entities.append(WaspBinarySensor(hass, config_entry.data | config_entry.options))
+
+    async_add_entities(entities)
 
 
 class WaspBinarySensor(BinarySensorEntity, RestoreEntity):

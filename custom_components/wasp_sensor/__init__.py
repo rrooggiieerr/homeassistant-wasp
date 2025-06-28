@@ -10,6 +10,8 @@ from typing import Dict, List
 
 from homeassistant import config as conf_util
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.core_config import Config
 from homeassistant.exceptions import HomeAssistantError
