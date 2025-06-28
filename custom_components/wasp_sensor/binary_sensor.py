@@ -1,10 +1,10 @@
 """Binary sensor platform for Wasp Sensor."""
 
 import asyncio
+from datetime import timedelta
 from functools import partial
 import logging
 
-from config.custom_components.axaremote import _LOGGER
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EVENT_HOMEASSISTANT_START
@@ -47,7 +47,6 @@ async def async_setup_entry(
     """Set up the Wasp in a Box sensor."""
     entities = []
 
-    _LOGGER.debug(config_entry)
     entities.append(WaspBinarySensor(hass, config_entry.data | config_entry.options))
 
     async_add_entities(entities)
@@ -87,40 +86,48 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         await self._evaluate_box_sensors()
 
         # Wasp Sensor State Changes
-        self.async_on_remove(
-            async_track_state_change_event(
-                self.hass,
-                self._config[CONF_WASP_SENSORS],
-                partial(self._wasp_sensor_change_handler, expected_state="on"),
+        sensors = self._config.get(CONF_WASP_SENSORS)
+        if sensors not in (None, []):
+            self.async_on_remove(
+                async_track_state_change_event(
+                    self.hass,
+                    sensors,
+                    partial(self._wasp_sensor_change_handler, expected_state="on"),
+                )
             )
-        )
 
         # Wasp Inverted Sensor State Changes
-        self.async_on_remove(
-            async_track_state_change_event(
-                self.hass,
-                self._config[CONF_WASP_INV_SENSORS],
-                partial(self._wasp_sensor_change_handler, expected_state="off"),
+        sensors = self._config.get(CONF_WASP_INV_SENSORS)
+        if sensors not in (None, []):
+            self.async_on_remove(
+                async_track_state_change_event(
+                    self.hass,
+                    sensors,
+                    partial(self._wasp_sensor_change_handler, expected_state="off"),
+                )
             )
-        )
 
         # Box Sensor State Changes
-        self.async_on_remove(
-            async_track_state_change_event(
-                self.hass,
-                self._config[CONF_BOX_SENSORS],
-                self._box_sensor_change_handler,
+        sensors = self._config.get(CONF_BOX_SENSORS)
+        if sensors not in (None, []):
+            self.async_on_remove(
+                async_track_state_change_event(
+                    self.hass,
+                    sensors,
+                    self._box_sensor_change_handler,
+                )
             )
-        )
 
         # Box Inverted Sensor State Changes
-        self.async_on_remove(
-            async_track_state_change_event(
-                self.hass,
-                self._config[CONF_BOX_INV_SENSORS],
-                self._box_sensor_change_handler,
+        sensors = self._config.get(CONF_BOX_INV_SENSORS)
+        if sensors not in (None, []):
+            self.async_on_remove(
+                async_track_state_change_event(
+                    self.hass,
+                    sensors,
+                    self._box_sensor_change_handler,
+                )
             )
-        )
 
     @callback
     async def _box_sensor_change_handler(self, event: Event):
@@ -148,7 +155,10 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
             self._config[CONF_TIMEOUT],
         )
 
-        await asyncio.sleep(self._config[CONF_TIMEOUT])
+        timeout = self._config[CONF_TIMEOUT]
+        if isinstance(timeout, dict):
+            timeout = timedelta(**timeout).total_seconds()
+        await asyncio.sleep(timeout)
 
         if self._box_closed and self._wasp_seen:
             _LOGGER.debug(
@@ -162,19 +172,23 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
             return
 
     async def _evaluate_box_sensors(self):
-        for this_box_sensor in self._config[CONF_BOX_SENSORS]:
-            this_state = self.hass.states.get(this_box_sensor).state
-            if this_state == "on":
-                self._box_closed = False
-                self._wasp_in_box = False
-                return
+        sensors = self._config.get(CONF_BOX_SENSORS)
+        if sensors not in (None, []):
+            for sensor in sensors:
+                state = self.hass.states.get(sensor).state
+                if state == "on":
+                    self._box_closed = False
+                    self._wasp_in_box = False
+                    return
 
-        for this_box_sensor in self._config[CONF_BOX_INV_SENSORS]:
-            this_state = self.hass.states.get(this_box_sensor).state
-            if this_state == "off":
-                self._box_closed = False
-                self._wasp_in_box = False
-                return
+        sensors = self._config.get(CONF_BOX_INV_SENSORS)
+        if sensors not in (None, []):
+            for sensor in sensors:
+                state = self.hass.states.get(sensor).state
+                if state == "off":
+                    self._box_closed = False
+                    self._wasp_in_box = False
+                    return
 
         self._box_closed = True
         return
@@ -215,17 +229,21 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         await self.async_update_ha_state()
 
     async def _evaluate_wasp_sensors(self):
-        for this_wasp_sensor in self._config[CONF_WASP_SENSORS]:
-            this_state = self.hass.states.get(this_wasp_sensor).state
-            if this_state == "on":
-                self._wasp_seen = True
-                return
+        sensors = self._config.get(CONF_WASP_SENSORS)
+        if sensors not in (None, []):
+            for this_wasp_sensor in sensors:
+                this_state = self.hass.states.get(this_wasp_sensor).state
+                if this_state == "on":
+                    self._wasp_seen = True
+                    return
 
-        for this_wasp_sensor in self._config[CONF_WASP_INV_SENSORS]:
-            this_state = self.hass.states.get(this_wasp_sensor).state
-            if this_state == "off":
-                self._wasp_seen = True
-                return
+        sensors = self._config.get(CONF_WASP_INV_SENSORS)
+        if sensors not in (None, []):
+            for this_wasp_sensor in sensors:
+                this_state = self.hass.states.get(this_wasp_sensor).state
+                if this_state == "off":
+                    self._wasp_seen = True
+                    return
 
         self._wasp_seen = False
         return
