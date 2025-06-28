@@ -9,11 +9,19 @@
 
 ## Introduction
 
-PIR Motion Sensors aren't perfect. If you enter a room and are sitting quietly -- working, reading, sleeping, watching Television -- a PIR Motion Sensor will eventually see no motion. Using such a sensor as the sole source of information to determine if a room is occupied can leave undesired behavior -- lights turning off while you're still in the room, HVAC no longer adjusting temperature for that room, etc. A Wasp Sensor is one solution to that problem.
+PIR Motion Sensors aren't perfect. If you enter a room and are sitting quietly -- working, reading,
+sleeping, watching Television -- a PIR Motion Sensor will eventually see no motion. Using such a
+sensor as the sole source of information to determine if a room is occupied can leave undesired
+behavior -- lights turning off while you're still in the room, HVAC no longer adjusting
+temperature for that room, etc. A Wasp Sensor is one solution to that problem.
 
-The name "Wasp in a Box" has been used many times in reference to the logic contained in this Integration. The idea is, if motion is seen in a room (the Wasp) while all the doors are closed, then, even if motion stops, people (the Wasp) are still in there. Once a door opens, the logic resets.
+The name "Wasp in a Box" has been used many times in reference to the logic contained in this
+helper. The idea is, if motion is seen in a room (the Wasp) while all the doors are closed, then,
+even if motion stops, people (the Wasp) are still in there. Once a door opens, the logic resets.
 
-This can also be used if you have motion sensors at all of the exits for a room. If motion happened inside the room and no motion has happened at the exits of a room, then someone is still inside the room.
+This can also be used if you have motion sensors at all of the exits for a room. If motion happened
+inside the room and no motion has happened at the exits of a room, then someone is still inside the
+room.
 
 ### Logic
 
@@ -27,15 +35,15 @@ If the "box" becomes closed WHILE motion is detected, the wasp sensor will wait 
 
 ### HACS
 
-The recommended way to install this Home Assistant integration is by using [HACS][hacs].
-Click the following button to open the integration directly on the HACS integration page.
+The recommended way to install this Home Assistant helper is by using [HACS][hacs].
+Click the following button to open the helper directly on the HACS integration page and select **Download**.
 
 [![Install Wasp in a Box from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-wasp&category=integration)
 
 Or follow these instructions:
 
-- Go to your **HACS** view in Home Assistant and then to **Integrations**
-- Open the **Custom repositories** menu
+- Go to your **HACS** view in Home Assistant
+- Open the the 3 dot **&vellip;** menu in the top right of your **HACS** view and select **Custom repositories**
 - Add this repository URL to the **Custom repositories** and select
 **Integration** as the **Category**
 - Click **Add**
@@ -63,7 +71,7 @@ A new Wasp sensor will now be added to your Helpers view.
 
 ### YAML
 
-This integration is configurable with YAML in `configuration.yaml`. Here's an example configuration:
+This helper is configurable with YAML in `configuration.yaml`. Here's an example configuration:
 
 ```yaml
 wasp_sensor:
@@ -124,11 +132,11 @@ If you don't have "door sensors" or have a room without doors, you can leave tha
 
 ## Contribution and appreciation
 
-You can contribute to this integration, or show your appreciation, in the following ways.
+You can contribute to this helper, or show your appreciation, in the following ways.
 
 ### Contribute your language
 
-If you would like to use this Home Assistant integration in your own language you can provide a
+If you would like to use this Home Assistant helper in your own language you can provide a
 translation file as found in the `custom_components/wasp_sensor/translations` directory. Create a
 pull request (preferred) or issue with the file attached.
 
