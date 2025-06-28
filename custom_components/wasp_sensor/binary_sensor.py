@@ -21,11 +21,12 @@ from .const import (
     CONF_BOX_INV_SENSORS,
     CONF_BOX_SENSORS,
     CONF_NAME,
+    CONF_SENSOR_CHANGE_DELAY,
     CONF_TIMEOUT,
     CONF_WASP_INV_SENSORS,
     CONF_WASP_SENSORS,
+    DEFAULT_SENSOR_CHANGE_DELAY,
     DOMAIN,
-    SENSOR_CHANGE_DELAY,
 )
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -232,16 +233,22 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         this_entity_id = event.data["entity_id"]
         new_state = event.data["new_state"].state
 
+        sensor_change_delay = self._config.get(
+            CONF_SENSOR_CHANGE_DELAY, DEFAULT_SENSOR_CHANGE_DELAY
+        )
+        if isinstance(sensor_change_delay, dict):
+            sensor_change_delay = timedelta(**sensor_change_delay).total_seconds()
+
         _LOGGER.debug(
             "%s: waiting for %s, currently %s, for %s seconds",
             self.entity_description.name,
             this_entity_id,
             new_state,
-            SENSOR_CHANGE_DELAY,
+            sensor_change_delay,
         )
 
         # Wait; some sensors send 'on' right before 'off'
-        await asyncio.sleep(SENSOR_CHANGE_DELAY)
+        await asyncio.sleep(sensor_change_delay)
 
         this_state = self.hass.states.get(this_entity_id).state
 
@@ -250,7 +257,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
             self.entity_description.name,
             this_entity_id,
             this_state,
-            SENSOR_CHANGE_DELAY,
+            sensor_change_delay,
         )
 
         if this_state == expected_state:

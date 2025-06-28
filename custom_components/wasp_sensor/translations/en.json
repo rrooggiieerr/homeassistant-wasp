@@ -9,7 +9,8 @@
 					"wasp_inv_sensors": "Inverted Wasp Sensors",
 					"box_sensors": "Box Sensors",
 					"box_inv_sensors": "Inverted Box Sensors",
-					"timeout": "Timeout"
+					"timeout": "Timeout",
+					"sensor_change_delay": "Sensor Change Delay"
 				},
 				"data_description": {
 				} 
@@ -25,7 +26,8 @@
 					"wasp_inv_sensors": "Inverted Wasp Sensors",
 					"box_sensors": "Box Sensors",
 					"box_inv_sensors": "Inverted Box Sensors",
-					"timeout": "Timeout"
+					"timeout": "Timeout",
+					"sensor_change_delay": "Sensor Change Delay"
 				},
 				"data_description": {
 				} 
