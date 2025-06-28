@@ -10,7 +10,8 @@ from typing import Dict, List
 
 from homeassistant import config as conf_util
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.core import Config, HomeAssistant
+from homeassistant.core import HomeAssistant
+from homeassistant.core_config import Config
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import discovery
 import homeassistant.helpers.config_validation as cv
@@ -33,6 +34,10 @@ from .const import (
 )
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
+
+PLATFORMS: list[Platform] = [
+    Platform.BINARY_SENSOR,
+]
 
 ENTRY_SCHEMA = vol.Schema(
     {
@@ -124,3 +129,27 @@ async def start_it_up(
             hass_config,
         )
     )
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Wasp in a Box from a config entry."""
+
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    entry.async_on_unload(entry.add_update_listener(update_listener))
+
+    return True
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload a config entry."""
+    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        hass.data[DOMAIN].pop(entry.entry_id)
+
+    return unload_ok
+
+
+async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Handle options update."""
+    _LOGGER.debug("Configuration options updated, reloading Wasp in a Box integration")
+    hass.config_entries.async_schedule_reload(entry.entry_id)(entry.entry_id)
