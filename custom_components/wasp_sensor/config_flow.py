@@ -21,12 +21,12 @@ from .const import (
     CONF_BOX_INV_SENSORS,
     CONF_BOX_SENSORS,
     CONF_NAME,
+    CONF_SENSOR_CHANGE_DELAY,
     CONF_TIMEOUT,
     CONF_WASP_INV_SENSORS,
     CONF_WASP_SENSORS,
-    DEFAULT_WASP_TIMEOUT,
-    CONF_SENSOR_CHANGE_DELAY,
     DEFAULT_SENSOR_CHANGE_DELAY,
+    DEFAULT_WASP_TIMEOUT,
     DOMAIN,
 )
 
@@ -41,22 +41,32 @@ class WaspConfigFlow(ConfigFlow, domain=DOMAIN):
     SCHEMA = vol.Schema(
         {
             vol.Required(CONF_NAME): TextSelector(),
-            vol.Optional(CONF_WASP_SENSORS): EntitySelector(
+            vol.Optional(CONF_WASP_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_WASP_INV_SENSORS): EntitySelector(
+            vol.Optional(CONF_WASP_INV_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_BOX_SENSORS): EntitySelector(
+            vol.Optional(CONF_BOX_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_BOX_INV_SENSORS): EntitySelector(
+            vol.Optional(CONF_BOX_INV_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_TIMEOUT, default=DEFAULT_WASP_TIMEOUT): DurationSelector(
+            vol.Optional(
+                CONF_TIMEOUT,
+                default={
+                    "seconds": DEFAULT_WASP_TIMEOUT,
+                },
+            ): DurationSelector(
                 DurationSelectorConfig(enable_day=False, enable_millisecond=True)
             ),
-            vol.Optional(CONF_SENSOR_CHANGE_DELAY, default=DEFAULT_SENSOR_CHANGE_DELAY): DurationSelector(
+            vol.Optional(
+                CONF_SENSOR_CHANGE_DELAY,
+                default={
+                    "seconds": DEFAULT_SENSOR_CHANGE_DELAY,
+                },
+            ): DurationSelector(
                 DurationSelectorConfig(enable_day=False, enable_millisecond=True)
             ),
         }
@@ -110,22 +120,27 @@ class WaspOptionsFlowHandler(OptionsFlow):
 
     OPTIONS_SCHEMA = vol.Schema(
         {
-            vol.Optional(CONF_WASP_SENSORS): EntitySelector(
+            vol.Optional(CONF_WASP_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_WASP_INV_SENSORS): EntitySelector(
+            vol.Optional(CONF_WASP_INV_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_BOX_SENSORS): EntitySelector(
+            vol.Optional(CONF_BOX_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_BOX_INV_SENSORS): EntitySelector(
+            vol.Optional(CONF_BOX_INV_SENSORS, default=[]): EntitySelector(
                 EntitySelectorConfig(multiple=True)
             ),
-            vol.Optional(CONF_TIMEOUT, default=DEFAULT_WASP_TIMEOUT): DurationSelector(
+            vol.Optional(
+                CONF_TIMEOUT, default={"seconds": DEFAULT_WASP_TIMEOUT}
+            ): DurationSelector(
                 DurationSelectorConfig(enable_day=False, enable_millisecond=True)
             ),
-            vol.Optional(CONF_SENSOR_CHANGE_DELAY, default=DEFAULT_SENSOR_CHANGE_DELAY): DurationSelector(
+            vol.Optional(
+                CONF_SENSOR_CHANGE_DELAY,
+                default={"seconds": DEFAULT_SENSOR_CHANGE_DELAY},
+            ): DurationSelector(
                 DurationSelectorConfig(enable_day=False, enable_millisecond=True)
             ),
         }
