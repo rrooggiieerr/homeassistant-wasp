@@ -1,0 +1,39 @@
+{
+	"config": {
+        "step": {
+			"user": {
+				"title": "Wesp in een Doos",
+				"data": {
+					"name": "Naam",
+					"wasp_sensors": "Wesp sensors",
+					"wasp_inv_sensors": "Tegengestelde Wesp sensors",
+					"box_sensors": "Doos sensors",
+					"box_inv_sensors": "Tegengestelde Doos sensors",
+					"timeout": "Timeout",
+					"sensor_change_delay": "Sensor wissel vertraging"
+				},
+				"data_description": {
+				} 
+			}
+		}
+	},
+	"options": {
+        "step": {
+			"init": {
+				"title": "Wesp in een Doos Opties",
+				"data": {
+					"wasp_sensors": "Wesp sensors",
+					"wasp_inv_sensors": "Tegengestelde Wesp sensors",
+					"box_sensors": "Doos sensors",
+					"box_inv_sensors": "Tegengestelde Doos sensors",
+					"timeout": "Timeout",
+					"sensor_change_delay": "Sensor wissel vertraging"
+				},
+				"data_description": {
+				} 
+			}
+		}
+	},
+	"binary_sensor": {
+	}
+}
