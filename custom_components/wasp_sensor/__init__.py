@@ -26,9 +26,11 @@ from .const import (
     CONF_BOX_INV_SENSORS,
     CONF_BOX_SENSORS,
     CONF_NAME,
+    CONF_SENSOR_CHANGE_DELAY,
     CONF_TIMEOUT,
     CONF_WASP_INV_SENSORS,
     CONF_WASP_SENSORS,
+    DEFAULT_SENSOR_CHANGE_DELAY,
     DEFAULT_WASP_TIMEOUT,
     DOMAIN,
     SERVICE_RELOAD,
@@ -49,6 +51,9 @@ ENTRY_SCHEMA = vol.Schema(
         vol.Optional(CONF_BOX_SENSORS, default=[]): cv.entity_ids,
         vol.Optional(CONF_BOX_INV_SENSORS, default=[]): cv.entity_ids,
         vol.Optional(CONF_TIMEOUT, default=DEFAULT_WASP_TIMEOUT): vol.Coerce(int),
+        vol.Optional(
+            CONF_SENSOR_CHANGE_DELAY, default=DEFAULT_SENSOR_CHANGE_DELAY
+        ): vol.Coerce(int),
     },
     extra=PREVENT_EXTRA,
 )
