@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any, Final
 
+from homeassistant.components import binary_sensor
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
@@ -42,16 +43,16 @@ class WaspConfigFlow(ConfigFlow, domain=DOMAIN):
         {
             vol.Required(CONF_NAME): TextSelector(),
             vol.Optional(CONF_WASP_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(CONF_WASP_INV_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(CONF_BOX_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(CONF_BOX_INV_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(
                 CONF_TIMEOUT,
@@ -121,16 +122,16 @@ class WaspOptionsFlowHandler(OptionsFlow):
     OPTIONS_SCHEMA = vol.Schema(
         {
             vol.Optional(CONF_WASP_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(CONF_WASP_INV_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(CONF_BOX_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(CONF_BOX_INV_SENSORS, default=[]): EntitySelector(
-                EntitySelectorConfig(multiple=True)
+                EntitySelectorConfig(multiple=True, domain=binary_sensor.DOMAIN)
             ),
             vol.Optional(
                 CONF_TIMEOUT, default={"seconds": DEFAULT_WASP_TIMEOUT}
