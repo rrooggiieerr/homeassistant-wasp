@@ -1,4 +1,5 @@
 """Constants for integration_blueprint."""
+
 # Base component constants
 NAME = "Wasp Sensor"
 DOMAIN = "wasp_sensor"

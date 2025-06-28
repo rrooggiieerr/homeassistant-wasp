@@ -1,28 +1,26 @@
 """Binary sensor platform for Wasp Sensor."""
-import logging
+
 import asyncio
 from functools import partial
+import logging
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.const import EVENT_HOMEASSISTANT_START
+from homeassistant.core import Event, callback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.restore_state import RestoreEntity
-from homeassistant.core import Event, callback
-
-from homeassistant.const import (
-    EVENT_HOMEASSISTANT_START,
-)
 
 from .const import (
     BINARY_SENSOR,
     BINARY_SENSOR_DEVICE_CLASS,
+    CONF_BOX_INV_SENSORS,
+    CONF_BOX_SENSORS,
+    CONF_NAME,
+    CONF_TIMEOUT,
+    CONF_WASP_INV_SENSORS,
+    CONF_WASP_SENSORS,
     DOMAIN,
     SENSOR_CHANGE_DELAY,
-    CONF_WASP_SENSORS,
-    CONF_WASP_INV_SENSORS,
-    CONF_BOX_SENSORS,
-    CONF_BOX_INV_SENSORS,
-    CONF_TIMEOUT,
-    CONF_NAME,
 )
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -55,7 +53,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         """Handle added to Hass."""
         await super().async_added_to_hass()
 
-        if (state := await self.async_get_last_state()) :
+        if state := await self.async_get_last_state():
             _LOGGER.debug("%s: restoring state %s", self._config[CONF_NAME], state)
             self._wasp_in_box = state.attributes.get("wasp_in_box", False)
             self._box_closed = state.attributes.get("box_closed", False)
