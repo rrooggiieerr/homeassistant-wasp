@@ -240,8 +240,6 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         return {
             "identifiers": {(DOMAIN, self.unique_id)},
             "name": self._config[CONF_NAME],
-            "model": BINARY_SENSOR,
-            "manufacturer": "Device Manu",
         }
 
     @property
