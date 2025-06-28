@@ -61,24 +61,28 @@ class WaspConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle the initial step."""
-        if user_input is None:
-            return self.async_show_form(
-                step_id="user",
-                data_schema=self.SCHEMA,
-            )
-
         errors: dict[str, str] = {}
 
-        if not errors:
+        if user_input is not None:
+            self.SCHEMA(user_input)
+
             title = user_input.get(CONF_NAME)
             data = {CONF_NAME: title}
             options = {
                 CONF_WASP_SENSORS: user_input.get(CONF_WASP_SENSORS),
+                CONF_WASP_INV_SENSORS: user_input.get(CONF_WASP_INV_SENSORS),
                 CONF_BOX_SENSORS: user_input.get(CONF_BOX_SENSORS),
+                CONF_BOX_INV_SENSORS: user_input.get(CONF_BOX_INV_SENSORS),
+                CONF_TIMEOUT: user_input.get(CONF_TIMEOUT),
             }
-            return self.async_create_entry(title=title, data=data, options=options)
 
-        data_schema = self.add_suggested_values_to_schema(self.SCHEMA, user_input)
+            if not errors:
+                return self.async_create_entry(title=title, data=data, options=options)
+
+        if user_input is not None:
+            data_schema = self.add_suggested_values_to_schema(self.SCHEMA, user_input)
+        else:
+            data_schema = self.SCHEMA
 
         return self.async_show_form(
             step_id="user",
