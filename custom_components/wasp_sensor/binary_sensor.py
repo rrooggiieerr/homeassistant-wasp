@@ -5,7 +5,11 @@ from datetime import timedelta
 from functools import partial
 import logging
 
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+    BinarySensorEntityDescription,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EVENT_HOMEASSISTANT_START
 from homeassistant.core import Event, HomeAssistant, callback
@@ -14,8 +18,6 @@ from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.restore_state import RestoreEntity
 
 from .const import (
-    BINARY_SENSOR,
-    BINARY_SENSOR_DEVICE_CLASS,
     CONF_BOX_INV_SENSORS,
     CONF_BOX_SENSORS,
     CONF_NAME,
@@ -32,8 +34,17 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 async def async_setup_platform(hass, _, async_add_entities, discovery_info=None):
     """Setup binary_sensor platform."""
     entities = []
-    for thing in discovery_info["entities"]:
-        entities.append(WaspBinarySensor(hass, thing))
+    for config in discovery_info["entities"]:
+        entity_description = BinarySensorEntityDescription(
+            key="online",
+            device_class=BinarySensorDeviceClass.OCCUPANCY,
+            name=config[CONF_NAME],
+        )
+        entities.append(
+            WaspBinarySensor(
+                entity_description, f"{DOMAIN}_{config[CONF_NAME]}", hass, config
+            )
+        )
 
     async_add_entities(entities)
     await discovery_info["registrar"](entities)
@@ -47,7 +58,19 @@ async def async_setup_entry(
     """Set up the Wasp in a Box sensor."""
     entities = []
 
-    entities.append(WaspBinarySensor(hass, config_entry.data | config_entry.options))
+    entity_description = BinarySensorEntityDescription(
+        key=None,
+        device_class=BinarySensorDeviceClass.OCCUPANCY,
+        name=config_entry.data[CONF_NAME],
+    )
+    entities.append(
+        WaspBinarySensor(
+            entity_description,
+            config_entry.entry_id,
+            hass,
+            config_entry.options,
+        )
+    )
 
     async_add_entities(entities)
 
@@ -55,11 +78,20 @@ async def async_setup_entry(
 class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
     """Wasp binary_sensor class."""
 
-    def __init__(self, hass, config):
+    def __init__(
+        self,
+        entity_description: BinarySensorEntityDescription,
+        unique_id: str,
+        hass,
+        config,
+    ):
         self.hass = hass
         self._config = config
 
-        _LOGGER.debug("%s: startup %s", self._config[CONF_NAME], self._config)
+        self._attr_unique_id = unique_id
+        self.entity_description = entity_description
+
+        _LOGGER.debug("%s: startup %s", self.entity_description.name, self._config)
 
         self._wasp_in_box = False
         self._box_closed = False
@@ -70,7 +102,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         await super().async_added_to_hass()
 
         if state := await self.async_get_last_state():
-            _LOGGER.debug("%s: restoring state %s", self._config[CONF_NAME], state)
+            _LOGGER.debug("%s: restoring state %s", self.entity_description.name, state)
             self._wasp_in_box = state.attributes.get("wasp_in_box", False)
             self._box_closed = state.attributes.get("box_closed", False)
             self._wasp_seen = state.attributes.get("wasp_seen", False)
@@ -136,7 +168,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
 
         _LOGGER.debug(
             "%s: %s is now %s",
-            self._config[CONF_NAME],
+            self.entity_description.name,
             this_entity_id,
             new_state,
         )
@@ -151,7 +183,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
 
         _LOGGER.debug(
             "%s: box is closed and wasp is seen, waiting %s seconds",
-            self._config[CONF_NAME],
+            self.entity_description.name,
             self._config[CONF_TIMEOUT],
         )
 
@@ -163,7 +195,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         if self._box_closed and self._wasp_seen:
             _LOGGER.debug(
                 "%s: box is still closed and wasp is still seen after %s seconds",
-                self._config[CONF_NAME],
+                self.entity_description.name,
                 self._config[CONF_TIMEOUT],
             )
 
@@ -202,7 +234,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
 
         _LOGGER.debug(
             "%s: waiting for %s, currently %s, for %s seconds",
-            self._config[CONF_NAME],
+            self.entity_description.name,
             this_entity_id,
             new_state,
             SENSOR_CHANGE_DELAY,
@@ -215,7 +247,7 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
 
         _LOGGER.debug(
             "%s: %s is %s after %s seconds",
-            self._config[CONF_NAME],
+            self.entity_description.name,
             this_entity_id,
             this_state,
             SENSOR_CHANGE_DELAY,
@@ -249,18 +281,6 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
         return
 
     @property
-    def unique_id(self):
-        """Return a unique ID to use for this entity."""
-        return f"{DOMAIN}_{self._config[CONF_NAME]}"
-
-    @property
-    def device_info(self):
-        return {
-            "identifiers": {(DOMAIN, self.unique_id)},
-            "name": self._config[CONF_NAME],
-        }
-
-    @property
     def extra_state_attributes(self):
         """Return the state attributes."""
         return {
@@ -271,16 +291,6 @@ class WaspBinarySensor(BinarySensorEntity, RestoreEntity):
             "box_closed": self._box_closed,
             "wasp_seen": self._wasp_seen,
         }
-
-    @property
-    def name(self):
-        """Return the name of the binary_sensor."""
-        return f"{DOMAIN}_{self._config[CONF_NAME]}"
-
-    @property
-    def device_class(self):
-        """Return the class of this binary_sensor."""
-        return BINARY_SENSOR_DEVICE_CLASS
 
     @property
     def is_on(self):
