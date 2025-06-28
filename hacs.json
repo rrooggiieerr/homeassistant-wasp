@@ -1,11 +1,4 @@
 {
     "name": "Wasp Sensor",
-    "hacs": "0.0.4",
-    "domains": [
-        "binary_sensor"
-    ],
-    "homeassistant": "0.118.0",
-    "country": [
-        "US"
-    ]
+    "homeassistant": "2025.6.0"
 }
