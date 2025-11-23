@@ -1,39 +1,39 @@
 {
-	"config": {
-        "step": {
-			"user": {
-				"title": "Wasp in a Box",
-				"data": {
-					"name": "Name",
-					"wasp_sensors": "Wasp sensors",
-					"wasp_inv_sensors": "Inverted Wasp Sensors",
-					"box_sensors": "Box Sensors",
-					"box_inv_sensors": "Inverted Box Sensors",
-					"timeout": "Timeout",
-					"sensor_change_delay": "Sensor Change Delay"
-				},
-				"data_description": {
-				} 
-			}
-		}
-	},
-	"options": {
-        "step": {
-			"init": {
-				"title": "Wasp in a Box Options",
-				"data": {
-					"wasp_sensors": "Wasp sensors",
-					"wasp_inv_sensors": "Inverted Wasp Sensors",
-					"box_sensors": "Box Sensors",
-					"box_inv_sensors": "Inverted Box Sensors",
-					"timeout": "Timeout",
-					"sensor_change_delay": "Sensor Change Delay"
-				},
-				"data_description": {
-				} 
-			}
-		}
-	},
-	"binary_sensor": {
-	}
+  "config": {
+    "step": {
+      "user": {
+        "title": "Wasp in a Box",
+        "data": {
+          "name": "Name",
+          "wasp_sensors": "Wasp sensors",
+          "wasp_inv_sensors": "Inverted Wasp Sensors",
+          "box_sensors": "Box Sensors",
+          "box_inv_sensors": "Inverted Box Sensors",
+          "timeout": "Timeout",
+          "sensor_change_delay": "Sensor Change Delay"
+        },
+        "data_description": {
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Wasp in a Box Options",
+        "data": {
+          "wasp_sensors": "Wasp sensors",
+          "wasp_inv_sensors": "Inverted Wasp Sensors",
+          "box_sensors": "Box Sensors",
+          "box_inv_sensors": "Inverted Box Sensors",
+          "timeout": "Timeout",
+          "sensor_change_delay": "Sensor Change Delay"
+        },
+        "data_description": {
+        }
+      }
+    }
+  },
+  "binary_sensor": {
+  }
 }
