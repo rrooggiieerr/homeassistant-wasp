@@ -11,9 +11,7 @@
 					"box_inv_sensors": "Tegengestelde Doos sensors",
 					"timeout": "Timeout",
 					"sensor_change_delay": "Sensor wissel vertraging"
-				},
-				"data_description": {
-				} 
+				}
 			}
 		}
 	},
@@ -28,8 +26,6 @@
 					"box_inv_sensors": "Tegengestelde Doos sensors",
 					"timeout": "Timeout",
 					"sensor_change_delay": "Sensor wissel vertraging"
-				},
-				"data_description": {
 				} 
 			}
 		}

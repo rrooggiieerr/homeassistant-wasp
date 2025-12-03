@@ -11,8 +11,6 @@
           "box_inv_sensors": "Inverted Box Sensors",
           "timeout": "Timeout",
           "sensor_change_delay": "Sensor Change Delay"
-        },
-        "data_description": {
         }
       }
     }
@@ -28,8 +26,6 @@
           "box_inv_sensors": "Inverted Box Sensors",
           "timeout": "Timeout",
           "sensor_change_delay": "Sensor Change Delay"
-        },
-        "data_description": {
         }
       }
     }
